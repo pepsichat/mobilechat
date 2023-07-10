@@ -1,0 +1,39 @@
+{
+  "files": {
+    "app.js": "/mobilechat/static/js/app.4d8b884f.chunk.js",
+    "app.js.map": "/mobilechat/static/js/app.4d8b884f.chunk.js.map",
+    "runtime~app.js": "/mobilechat/static/js/runtime~app.e1c8352b.js",
+    "runtime~app.js.map": "/mobilechat/static/js/runtime~app.e1c8352b.js.map",
+    "static/js/2.e322bab9.chunk.js": "/mobilechat/static/js/2.e322bab9.chunk.js",
+    "static/js/2.e322bab9.chunk.js.map": "/mobilechat/static/js/2.e322bab9.chunk.js.map",
+    "fonts/AntDesign.ttf": "/mobilechat/./fonts/AntDesign.ttf",
+    "fonts/Entypo.ttf": "/mobilechat/./fonts/Entypo.ttf",
+    "fonts/Feather.ttf": "/mobilechat/./fonts/Feather.ttf",
+    "fonts/FontAwesome.ttf": "/mobilechat/./fonts/FontAwesome.ttf",
+    "fonts/FontAwesome5_Brands.ttf": "/mobilechat/./fonts/FontAwesome5_Brands.ttf",
+    "fonts/FontAwesome5_Solid.ttf": "/mobilechat/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Fontisto.ttf": "/mobilechat/./fonts/Fontisto.ttf",
+    "fonts/Foundation.ttf": "/mobilechat/./fonts/Foundation.ttf",
+    "fonts/Ionicons.ttf": "/mobilechat/./fonts/Ionicons.ttf",
+    "fonts/MaterialCommunityIcons.ttf": "/mobilechat/./fonts/MaterialCommunityIcons.ttf",
+    "fonts/MaterialIcons.ttf": "/mobilechat/./fonts/MaterialIcons.ttf",
+    "fonts/SimpleLineIcons.ttf": "/mobilechat/./fonts/SimpleLineIcons.ttf",
+    "favicon-16.png": "/mobilechat/favicon-16.png",
+    "favicon-32.png": "/mobilechat/favicon-32.png",
+    "favicon.ico": "/mobilechat/favicon.ico",
+    "index.html": "/mobilechat/index.html",
+    "manifest.json": "/mobilechat/manifest.json",
+    "serve.json": "/mobilechat/serve.json",
+    "static/js/2.e322bab9.chunk.js.LICENSE.txt": "/mobilechat/static/js/2.e322bab9.chunk.js.LICENSE.txt",
+    "static/media/Pepsi-Logo.png": "/mobilechat/static/media/Pepsi-Logo.32560c85.png",
+    "static/media/bell.png": "/mobilechat/static/media/bell.cf04af27.png",
+    "static/media/heart.png": "/mobilechat/static/media/heart.23b5c2c0.png",
+    "static/media/rocket.png": "/mobilechat/static/media/rocket.d2f3bf41.png",
+    "static/media/star.png": "/mobilechat/static/media/star.69c71386.png"
+  },
+  "entrypoints": [
+    "static/js/runtime~app.e1c8352b.js",
+    "static/js/2.e322bab9.chunk.js",
+    "static/js/app.4d8b884f.chunk.js"
+  ]
+}

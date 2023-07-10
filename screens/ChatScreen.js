@@ -16,10 +16,13 @@ const ChatScreen = ({ navigation }) => {
     const [menuText, setMenuText] = useState("");
 
     const [count, setCount] = useState(3);
+    const [searchchat, setSearchchat] = useState('unread');
+
 
     var shopCode = ''
     var chatName = ''
     var menuChat = ''
+
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
     const [masterDataSource, setMasterDataSource] = useState([]);
@@ -27,8 +30,15 @@ const ChatScreen = ({ navigation }) => {
     const getUser = async () => {
         setFilteredDataSource("")
         setMasterDataSource("")
+        var Data = {
+            searchchat: searchchat,
+        };
         try {
-            const response = await fetch('https://school.treesbot.com/pepsichat/select_user_and_log.php')
+            const response = await fetch('https://school.treesbot.com/pepsichat/select_user_and_log_limit.php', {
+                method: 'POST',
+                body: JSON.stringify(Data)
+            })
+            //  const response = await fetch('https://school.treesbot.com/pepsichat/select_user_and_log_limit.php')
             const json = await response.json()
             setFilteredDataSource(json);
             setMasterDataSource(json);
@@ -93,7 +103,7 @@ const ChatScreen = ({ navigation }) => {
             status: 'unread'
         };
         try {
-            const response = await fetch('https://school.treesbot.com/pepsichat/insert_chat_log.php', {
+            const response = await fetch('https://school.treesbot.com/pepsichat/insert_chat_log_test.php', {
                 method: 'POST',
                 body: JSON.stringify(Data)
             })
@@ -131,8 +141,15 @@ const ChatScreen = ({ navigation }) => {
     }
 
     const selectChatLog = async () => {
+        var Data = {
+            searchchat: searchchat,
+        };
         try {
-            const response = await fetch('https://school.treesbot.com/pepsichat/select_user_and_log.php')
+            const response = await fetch('https://school.treesbot.com/pepsichat/select_user_and_log_limit.php', {
+                method: 'POST',
+                body: JSON.stringify(Data)
+            })
+            //  const response = await fetch('https://school.treesbot.com/pepsichat/select_user_and_log_limit.php')
             const json = await response.json()
             setFilteredDataSource(json);
             setMasterDataSource(json);
@@ -178,6 +195,12 @@ const ChatScreen = ({ navigation }) => {
             // show your message success
             updateChat(getchatText)
         }
+    }
+
+    const submitsearch = async (getsearchchat) => {
+        setCount(0);
+        setSearchchat(getsearchchat);
+        selectChatLog()
     }
 
 
@@ -530,7 +553,7 @@ const ChatScreen = ({ navigation }) => {
         <View style={[styles.container, {
             flexDirection: "row"
         }]}>
-            <View style={{ flex: 1, backgroundColor: "write" }, styles.container}>
+            <View style={{ flex: 1, backgroundColor: "write" }}>
                 <SearchBar
                     lightTheme
                     round
@@ -540,44 +563,65 @@ const ChatScreen = ({ navigation }) => {
                     placeholder="ค้นหาจากรหัสร้านค้า..."
                     value={search}
                 />
-                        <SectionList
-                            style={{ height: 100 }}
-                            ItemSeparatorComponent={FlatListItemSeparator}
-                            sections={[
-                                { data: filteredDataSource },
-                            ]}
-                            renderItem={({ item }) => (
-                                // Single Comes here which will be repeatative for the FlatListItems
-                                <View style={{ flex: 1, flexDirection: 'row', marginLeft: 20 }}>
-                                    <Image
-                                        source={{ uri: item.displayimage }}
-                                        style={styles.Img}
-                                    />
-                                    <Text
-                                        style={styles.sectionListItemStyle}
-                                        //Item Separator View
-                                        onPress={() => updateChatLog(item.shopname, item.shopcode, item.chatname, item.menu)}>
-
-                                        {item.shopcode} ({item.shopname})
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            textAlign: 'center',
-                                            backgroundColor: item.chatcolor,
-                                            fontSize: 10,
-                                            padding: 5,
-                                            marginTop: 5,
-                                            color: '#fff',
-                                            height: 20,
-                                            width: 20,
-                                            borderRadius: 10
-                                        }}>
-                                        {item.chatcount}
-                                    </Text>
-                                </View>
-                            )}
-                            keyExtractor={(item, index) => index}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        padding: 10,
+                        gap: 5
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <Button title="ยังไม่ได้อ่าน" style={styles.button}
+                            color={"#FF0000"}
+                            onPress={() => submitsearch("unread")}
                         />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Button title="อ่านแล้ว" style={styles.button}
+                            color={"#006400"}
+                            onPress={() => submitsearch("read")}
+                        />
+                    </View>
+                </View>
+
+                <SectionList
+                    style={{ height: 100 }}
+                    ItemSeparatorComponent={FlatListItemSeparator}
+                    sections={[
+                        { data: filteredDataSource },
+                    ]}
+                    renderItem={({ item }) => (
+                        // Single Comes here which will be repeatative for the FlatListItems
+                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 20 }}>
+                            <Image
+                                source={{ uri: item.displayimage }}
+                                style={styles.Img}
+                            />
+                            <Text
+                                style={styles.sectionListItemStyle}
+                                //Item Separator View
+                                onPress={() => updateChatLog(item.shopname, item.shopcode, item.chatname, item.menu)}>
+
+                                {item.shopcode} ({item.shopname})
+                            </Text>
+                            <Text
+                                style={{
+                                    textAlign: 'center',
+                                    backgroundColor: item.chatcolor,
+                                    fontSize: 10,
+                                    padding: 5,
+                                    marginTop: 5,
+                                    color: '#fff',
+                                    height: 20,
+                                    width: 20,
+                                    borderRadius: 10
+                                }}>
+                                {item.chatcount}
+                            </Text>
+                        </View>
+                    )}
+                    keyExtractor={(item, index) => index}
+                />
             </View>
             <View style={{ flex: 2, backgroundColor: "lightgray" }} >
                 <View
@@ -700,6 +744,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#C8C8C8',
     },
     button: {
+        justifyContent: 'center',
+        width: 250,
+        height: 40,
+        borderRadius: 10
+    },
+    buttonchat: {
         justifyContent: 'center',
         width: 250,
         height: 40,

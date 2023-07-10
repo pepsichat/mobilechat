@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { SectionList, StyleSheet, Text, View, Image, Alert, Modal, Pressable} from 'react-native';
+import { SectionList, StyleSheet, Text, View, Image, Alert, Modal, Pressable } from 'react-native';
 import { db } from '../firebase';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { FlatList } from 'react-native';
@@ -40,18 +40,10 @@ const HistoryScreen = ({ navigation }) => {
     const [filteredDataSource6, setFilteredDataSource6] = useState([]);
     const [masterDataSource6, setMasterDataSource6] = useState([]);
 
-    const [data, setData] = React.useState([])
+    const [data, setData] = useState([]);
     const fileName = "Export_Chat_Report"; // here enter filename for your excel file
 
 
-    React.useEffect(() => {
-
-        const fetchData = () => {
-            axios.get('https://school.treesbot.com/pepsichat/export_chat_all.php').then(r => setData(r.data))
-        }
-        fetchData()
-
-    }, [])
 
 
     const getUser = async (menu) => {
@@ -87,7 +79,7 @@ const HistoryScreen = ({ navigation }) => {
             }
         } catch (error) {
             console.error(error)
-        } 
+        }
     }
 
     useEffect(() => {
@@ -98,6 +90,10 @@ const HistoryScreen = ({ navigation }) => {
         getUser('group5')
         getUser('')
 
+        const fetchData = () => {
+            axios.get('https://school.treesbot.com/pepsichat/export_chat_all.php').then(r => setData(r.data))
+        }
+        fetchData()
     }, [])
 
     const searchFilterFunction = (text) => {
@@ -185,7 +181,7 @@ const HistoryScreen = ({ navigation }) => {
                 user: doc.data().user,
                 image: doc.data().image,
                 video: doc.data().video
-                
+
             }))
         ))
         return () => unsubscribe;
@@ -288,7 +284,7 @@ const HistoryScreen = ({ navigation }) => {
             // Try setting `flexDirection` to `"row"`.
             flexDirection: "row"
         }]}>
-            <View style={{ flex: 1, backgroundColor: "white" }, styles.container}>
+            <View style={{ flex: 1, backgroundColor: "white" }}>
                 <ExportToExcel apiData={data} fileName={fileName} />
                 <SearchBar
                     lightTheme
@@ -301,6 +297,7 @@ const HistoryScreen = ({ navigation }) => {
                 />
 
                 <SectionList
+                    style={{ height: 100 }}
                     ItemSeparatorComponent={FlatListItemSeparator}
                     sections={[
                         { title: 'แจ้งปัญหาจากกิจกรรมถ่ายรูปตู้แช่', data: filteredDataSource1 },
@@ -316,7 +313,7 @@ const HistoryScreen = ({ navigation }) => {
                     )}
                     renderItem={({ item }) => (
                         // Single Comes here which will be repeatative for the FlatListItems
-                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 20 }}>
                             <Image
                                 source={{ uri: item.displayimage }}
                                 style={styles.Img}
@@ -378,7 +375,7 @@ const HistoryScreen = ({ navigation }) => {
                         marginRight: 20
                     }}
                 >
-                    <View style={{ flex: 1}}>
+                    <View style={{ flex: 1 }}>
                         <Image
                             source={{ uri: shopDisplayImage }}
                             style={styles.Img2}
@@ -414,7 +411,7 @@ const HistoryScreen = ({ navigation }) => {
                 </View>
             </View>
         </View >
-      
+
     )
 }
 export default HistoryScreen
@@ -518,4 +515,3 @@ const styles = StyleSheet.create({
         textAlign: "center"
     }
 });
-

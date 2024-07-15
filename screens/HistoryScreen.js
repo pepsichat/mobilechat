@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { SectionList, StyleSheet, Text, View, Image, Alert, Modal, Pressable} from 'react-native';
+import { SectionList, StyleSheet, Text, View, Image, Alert, Modal, Pressable } from 'react-native';
 import { db } from '../firebase';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { FlatList } from 'react-native';
@@ -36,22 +36,18 @@ const HistoryScreen = ({ navigation }) => {
     const [masterDataSource4, setMasterDataSource4] = useState([]);
     const [filteredDataSource5, setFilteredDataSource5] = useState([]);
     const [masterDataSource5, setMasterDataSource5] = useState([]);
+    
 
     const [filteredDataSource6, setFilteredDataSource6] = useState([]);
     const [masterDataSource6, setMasterDataSource6] = useState([]);
 
-    const [data, setData] = React.useState([])
+    const [filteredDataSource7, setFilteredDataSource7] = useState([]);
+    const [masterDataSource7, setMasterDataSource7] = useState([]);
+
+    const [data, setData] = useState([]);
     const fileName = "Export_Chat_Report"; // here enter filename for your excel file
 
 
-    React.useEffect(() => {
-
-        const fetchData = () => {
-            axios.get('https://school.treesbot.com/pepsichat/export_chat_all.php').then(r => setData(r.data))
-        }
-        fetchData()
-
-    }, [])
 
 
     const getUser = async (menu) => {
@@ -59,35 +55,44 @@ const HistoryScreen = ({ navigation }) => {
             menu: menu,
         };
         try {
-            const response = await fetch('https://school.treesbot.com/pepsichat/select_user_menu.php', {
+            const response = await fetch('https://school.treesbot.com/pepsichat_test/select_user_menu.php', {
                 method: 'POST',
                 body: JSON.stringify(Data)
             })
+
             const json = await response.json()
-            if (menu == 'group1') {
-                setFilteredDataSource1(json);
-                setMasterDataSource1(json);
-                onPressTitle(json[0].displayimage, json[0].shopname, json[0].shopcode, json[0].tell, json[0].address, json[0].chatname, json[0].menu)
-                getTable(json[0].shopcode)
-            } else if (menu == 'group2') {
-                setFilteredDataSource2(json);
-                setMasterDataSource2(json);
-            } else if (menu == 'group3') {
-                setFilteredDataSource3(json);
-                setMasterDataSource3(json);
-            } else if (menu == 'group4') {
-                setFilteredDataSource4(json);
-                setMasterDataSource4(json);
-            } else if (menu == 'group5') {
-                setFilteredDataSource5(json);
-                setMasterDataSource5(json);
-            } else if (menu == '') {
-                setFilteredDataSource6(json);
-                setMasterDataSource6(json);
+
+            if (json[0].Message != 'Not Complete') {
+                if (menu == 'group1') {
+                    setFilteredDataSource1(json[0].Message);
+                    setMasterDataSource1(json[0].Message);
+                    onPressTitle(json[0].Message[0].displayimage, json[0].Message[0].shopname, json[0].Message[0].shopcode, json[0].Message[0].tell, json[0].Message[0].address, json[0].Message[0].chatname, json[0].Message[0].menu)
+                    getTable(json[0].shopcode)
+                } else if (menu == 'group2') {
+                    setFilteredDataSource2(json[0].Message);
+                    setMasterDataSource2(json[0].Message);
+                } else if (menu == 'group3') {
+                    setFilteredDataSource3(json[0].Message);
+                    setMasterDataSource3(json[0].Message);
+                } else if (menu == 'group4') {
+                    setFilteredDataSource4(json[0].Message);
+                    setMasterDataSource4(json[0].Message);
+                } else if (menu == 'group5') {
+                    setFilteredDataSource5(json[0].Message);
+                    setMasterDataSource5(json[0].Message);
+                } else if (menu == 'admin') {
+                    setFilteredDataSource7(json[0].Message);
+                    setMasterDataSource7(json[0].Message);
+                } else if (menu == '') {
+                    setFilteredDataSource6(json[0].Message);
+                    setMasterDataSource6(json[0].Message);
+                }
             }
+
+            
         } catch (error) {
             console.error(error)
-        } 
+        }
     }
 
     useEffect(() => {
@@ -96,8 +101,13 @@ const HistoryScreen = ({ navigation }) => {
         getUser('group3')
         getUser('group4')
         getUser('group5')
+        getUser('admin')
         getUser('')
 
+        const fetchData = () => {
+            axios.get('https://school.treesbot.com/pepsichat_test/export_chat_all.php').then(r => setData(r.data))
+        }
+        fetchData()
     }, [])
 
     const searchFilterFunction = (text) => {
@@ -148,13 +158,20 @@ const HistoryScreen = ({ navigation }) => {
                 const textData = text.toUpperCase();
                 return itemData.indexOf(textData) > -1;
             });
+            const newData7 = masterDataSource7.filter(function (item) {
+                const itemData = item.shopcode
+                    ? item.shopcode.toUpperCase()
+                    : ''.toUpperCase();
+                const textData = text.toUpperCase();
+                return itemData.indexOf(textData) > -1;
+            });
             setFilteredDataSource1(newData1);
             setFilteredDataSource2(newData2);
             setFilteredDataSource3(newData3);
             setFilteredDataSource4(newData4);
             setFilteredDataSource5(newData5);
-            setFilteredDataSource6(newData6)
-
+            setFilteredDataSource6(newData6);
+            setFilteredDataSource6(newData7);
             setSearch(text);
         } else {
             // Inserted text is blank
@@ -164,7 +181,8 @@ const HistoryScreen = ({ navigation }) => {
             setFilteredDataSource3(masterDataSource3);
             setFilteredDataSource4(masterDataSource4);
             setFilteredDataSource5(masterDataSource5);
-            setFilteredDataSource6(masterDataSource6)
+            setFilteredDataSource6(masterDataSource6);
+            setFilteredDataSource7(masterDataSource7);
 
             setSearch(text);
         }
@@ -185,7 +203,7 @@ const HistoryScreen = ({ navigation }) => {
                 user: doc.data().user,
                 image: doc.data().image,
                 video: doc.data().video
-                
+
             }))
         ))
         return () => unsubscribe;
@@ -221,12 +239,14 @@ const HistoryScreen = ({ navigation }) => {
             shopcode: shopcode,
         };
         try {
-            const response = await fetch('https://school.treesbot.com/pepsichat/select_user_shopcode.php', {
+            const response = await fetch('https://school.treesbot.com/pepsichat_test/select_user_shopcode.php', {
                 method: 'POST',
                 body: JSON.stringify(Data)
             })
             const json = await response.json()
-            setDataTable(json);
+            if (json[0].Message != 'Not Complete') {
+                setDataTable(json[0].Message);
+            }
         } catch (error) {
             console.error(error)
         }
@@ -244,6 +264,8 @@ const HistoryScreen = ({ navigation }) => {
             groupname = 'สอบถามรายละเอียดทั่วไป'
         } else if (menu == 'group5') {
             groupname = 'แอด LINE เป๊ปซี่แฟนคลับ'
+        } else if (menu == 'admin') {
+            groupname = 'แอดมิดเริ่มสนทนา'
         } else if (menu == '') {
             groupname = 'ไม่ได้เลือกหัวข้อสนทนา'
         }
@@ -288,7 +310,7 @@ const HistoryScreen = ({ navigation }) => {
             // Try setting `flexDirection` to `"row"`.
             flexDirection: "row"
         }]}>
-            <View style={{ flex: 1, backgroundColor: "white" }, styles.container}>
+            <View style={{ flex: 1, backgroundColor: "white" }}>
                 <ExportToExcel apiData={data} fileName={fileName} />
                 <SearchBar
                     lightTheme
@@ -301,6 +323,7 @@ const HistoryScreen = ({ navigation }) => {
                 />
 
                 <SectionList
+                    style={{ height: 100 }}
                     ItemSeparatorComponent={FlatListItemSeparator}
                     sections={[
                         { title: 'แจ้งปัญหาจากกิจกรรมถ่ายรูปตู้แช่', data: filteredDataSource1 },
@@ -309,6 +332,7 @@ const HistoryScreen = ({ navigation }) => {
                         { title: 'สอบถามรายละเอียดทั่วไป', data: filteredDataSource4 },
                         { title: 'แอด LINE เป๊ปซี่แฟนคลับ', data: filteredDataSource5 },
                         { title: 'ไม่ได้เลือกหัวข้อสนทนา', data: filteredDataSource6 },
+                        { title: 'แอดมินเริ่มสนทนา', data: filteredDataSource7 },
 
                     ]}
                     renderSectionHeader={({ section }) => (
@@ -316,7 +340,7 @@ const HistoryScreen = ({ navigation }) => {
                     )}
                     renderItem={({ item }) => (
                         // Single Comes here which will be repeatative for the FlatListItems
-                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 20}}>
+                        <View style={{ flex: 1, flexDirection: 'row', marginLeft: 20 }}>
                             <Image
                                 source={{ uri: item.displayimage }}
                                 style={styles.Img}
@@ -378,7 +402,7 @@ const HistoryScreen = ({ navigation }) => {
                         marginRight: 20
                     }}
                 >
-                    <View style={{ flex: 1}}>
+                    <View style={{ flex: 1 }}>
                         <Image
                             source={{ uri: shopDisplayImage }}
                             style={styles.Img2}
@@ -414,7 +438,7 @@ const HistoryScreen = ({ navigation }) => {
                 </View>
             </View>
         </View >
-      
+
     )
 }
 export default HistoryScreen
@@ -518,4 +542,3 @@ const styles = StyleSheet.create({
         textAlign: "center"
     }
 });
-
